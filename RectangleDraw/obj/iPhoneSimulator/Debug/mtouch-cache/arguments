@@ -1,0 +1,33 @@
+# Version: 7.2.5.5 (87026b6)
+# [first argument, ignore] # /Users/victorbadila-home/Desktop/XamarinProjects/UIViewTests/RectangleDraw/bin/iPhoneSimulator/Debug/mtouch.exe
+/Developer/MonoTouch/usr/bin/mtouch \
+	-sdkroot \
+	/Applications/Xcode.app/Contents/Developer \
+	--cache \
+	/Users/victorbadila-home/Desktop/XamarinProjects/UIViewTests/RectangleDraw/obj/iPhoneSimulator/Debug/mtouch-cache \
+	--nomanifest \
+	--nosign \
+	-sim \
+	/Users/victorbadila-home/Desktop/XamarinProjects/UIViewTests/RectangleDraw/bin/iPhoneSimulator/Debug/RectangleDraw.app \
+	-r \
+	/Developer/MonoTouch/usr/lib/mono/2.1/System.dll \
+	-r \
+	/Developer/MonoTouch/usr/lib/mono/2.1/System.Xml.dll \
+	-r \
+	/Developer/MonoTouch/usr/lib/mono/2.1/System.Core.dll \
+	-r \
+	/Developer/MonoTouch/usr/lib/mono/2.1/monotouch.dll \
+	-r \
+	/Developer/MonoTouch/usr/lib/mono/2.1/System.Net.dll \
+	-r \
+	/Developer/MonoTouch/usr/lib/mono/2.1/System.Net.Http.dll \
+	-r \
+	/Users/victorbadila-home/Desktop/XamarinProjects/UIViewTests/Components/restsharp-104.4.0/lib/ios/RestSharp.MonoTouch.dll \
+	-debug \
+	-nolink \
+	-sdk \
+	7.1 \
+	-targetver \
+	7.0 \
+	--abi=i386 \
+	/Users/victorbadila-home/Desktop/XamarinProjects/UIViewTests/RectangleDraw/bin/iPhoneSimulator/Debug/RectangleDraw.exe \
