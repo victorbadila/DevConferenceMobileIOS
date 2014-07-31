@@ -11,8 +11,8 @@ using System.CodeDom.Compiler;
 
 namespace RectangleDraw
 {
-	[Register ("RectangleDrawViewController")]
-	partial class RectangleDrawViewController
+	[Register ("SecondViewController")]
+	partial class SecondViewController
 	{
 		void ReleaseDesignerOutlets ()
 		{

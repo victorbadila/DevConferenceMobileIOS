@@ -55,6 +55,20 @@ namespace RectangleDraw
 
 			CreateHttpTestContent ();
 
+			var rectangle = new RectangleF (30, 400, 100, 40);
+
+			var button = new UIButton (rectangle);
+			button.BackgroundColor = UIColor.Blue;
+			button.SetTitle ("Change View", UIControlState.Normal);
+			button.TouchUpInside += delegate {
+				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
+				var ctrl = (UIViewController)board.InstantiateViewController ("SecondViewController");
+				ctrl.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
+				this.PresentViewController (ctrl, true, null);
+			};
+
+			View.AddSubview (button);
+
 		}
 
 		private void InitDates()
@@ -112,7 +126,7 @@ namespace RectangleDraw
 
 		private void CreateHttpTestContent() 
 		{
-			var rect = new RectangleF(100, 400, 140, 50);
+			var rect = new RectangleF(150, 400, 140, 50);
 			var button = UIButton.FromType(UIButtonType.System);
 
 			button.Font = UIFont.FromName("Helvetica", 13f);

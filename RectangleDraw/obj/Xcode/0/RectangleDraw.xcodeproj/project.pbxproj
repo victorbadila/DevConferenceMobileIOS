@@ -1,0 +1,242 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B713A9E0000000000000000 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F02473C0000000000000000 /* UIKit.framework */; };
+		D06DDD100000000000000000 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1097EA6F0000000000000000 /* MapKit.framework */; };
+		223A46690000000000000000 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25CB53070000000000000000 /* Foundation.framework */; };
+		15A528B20000000000000000 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193635500000000000000000 /* CoreGraphics.framework */; };
+		36B658600000000000000000 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FC722400000000000000000 /* Default-568h@2x.png */; };
+		189ECE1E0000000000000000 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C2FDABC0000000000000000 /* Info.plist */; };
+		6C98F0800000000000000000 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A5A9BA600000000000000000 /* Entitlements.plist */; };
+		34F44FF20000000000000000 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38855C900000000000000000 /* MainStoryboard.storyboard */; };
+		1149D1C60000000000000000 /* SecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14DADE640000000000000000 /* SecondViewController.xib */; };
+		812DD9100000000000000000 /* AppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = BA3EA2F00000000000000000 /* AppDelegate.h */; };
+		3D2CD49B0000000000000000 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BDE139000000000000000000 /* AppDelegate.m */; };
+		3428C3820000000000000000 /* RectangleDrawViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 37B9D0200000000000000000 /* RectangleDrawViewController.h */; };
+		2793A5CB0000000000000000 /* RectangleDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B24B2690000000000000000 /* RectangleDrawViewController.m */; };
+		77A343D00000000000000000 /* SecondViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B0B40DB00000000000000000 /* SecondViewController.h */; };
+		2537E5000000000000000000 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B6448300000000000000000 /* SecondViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2B8C21D90000000000000000 /* RectangleDraw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "RectangleDraw.app"; path = "RectangleDraw.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F02473C0000000000000000 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "UIKit.framework"; path = "System/Library/Frameworks/UIKit.framework"; sourceTree = SDKROOT; };
+		1097EA6F0000000000000000 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "MapKit.framework"; path = "System/Library/Frameworks/MapKit.framework"; sourceTree = SDKROOT; };
+		25CB53070000000000000000 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Foundation.framework"; path = "System/Library/Frameworks/Foundation.framework"; sourceTree = SDKROOT; };
+		193635500000000000000000 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreGraphics.framework"; path = "System/Library/Frameworks/CoreGraphics.framework"; sourceTree = SDKROOT; };
+		6FC722400000000000000000 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		1C2FDABC0000000000000000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info.plist"; path = "Info.plist"; sourceTree = "<group>"; };
+		A5A9BA600000000000000000 /* Entitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Entitlements.plist"; path = "Entitlements.plist"; sourceTree = "<group>"; };
+		38855C900000000000000000 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "MainStoryboard.storyboard"; path = "MainStoryboard.storyboard"; sourceTree = "<group>"; };
+		14DADE640000000000000000 /* SecondViewController.xib */ = {isa = PBXFileReference; name = "SecondViewController.xib"; path = "SecondViewController.xib"; sourceTree = "<group>"; };
+		BA3EA2F00000000000000000 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "AppDelegate.h"; path = "AppDelegate.h"; sourceTree = "<group>"; };
+		BDE139000000000000000000 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "AppDelegate.m"; path = "AppDelegate.m"; sourceTree = "<group>"; };
+		37B9D0200000000000000000 /* RectangleDrawViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "RectangleDrawViewController.h"; path = "RectangleDrawViewController.h"; sourceTree = "<group>"; };
+		2B24B2690000000000000000 /* RectangleDrawViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "RectangleDrawViewController.m"; path = "RectangleDrawViewController.m"; sourceTree = "<group>"; };
+		B0B40DB00000000000000000 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "SecondViewController.h"; path = "SecondViewController.h"; sourceTree = "<group>"; };
+		3B6448300000000000000000 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "SecondViewController.m"; path = "SecondViewController.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		267EE3960000000000000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B713A9E0000000000000000 /* UIKit.framework in Frameworks */,
+				D06DDD100000000000000000 /* MapKit.framework in Frameworks */,
+				223A46690000000000000000 /* Foundation.framework in Frameworks */,
+				15A528B20000000000000000 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		698552400000000000000000 = {
+			isa = PBXGroup;
+			children = (
+				313209700000000000000000 /* RectangleDraw */,
+				14DC879C0000000000000000 /* Frameworks */,
+				3BE52F4A0000000000000000 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3BE52F4A0000000000000000 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2B8C21D90000000000000000 /* RectangleDraw.app */,
+			);
+			name = "Products";
+			sourceTree = "<group>";
+		};
+		14DC879C0000000000000000 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2F02473C0000000000000000 /* UIKit.framework */,
+				1097EA6F0000000000000000 /* MapKit.framework */,
+				25CB53070000000000000000 /* Foundation.framework */,
+				193635500000000000000000 /* CoreGraphics.framework */,
+			);
+			name = "Frameworks";
+			sourceTree = "<group>";
+		};
+		313209700000000000000000 /* RectangleDraw */ = {
+			isa = PBXGroup;
+			children = (
+				BA3EA2F00000000000000000 /* AppDelegate.h */,
+				6FC722400000000000000000 /* Default-568h@2x.png */,
+				A5A9BA600000000000000000 /* Entitlements.plist */,
+				1C2FDABC0000000000000000 /* Info.plist */,
+				38855C900000000000000000 /* MainStoryboard.storyboard */,
+				37B9D0200000000000000000 /* RectangleDrawViewController.h */,
+				B0B40DB00000000000000000 /* SecondViewController.h */,
+				14DADE640000000000000000 /* SecondViewController.xib */,
+				3F0ECC780000000000000000 /* Supporting Files */,
+			);
+			name = "RectangleDraw";
+			sourceTree = "<group>";
+		};
+		3F0ECC780000000000000000 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BDE139000000000000000000 /* AppDelegate.m */,
+				2B24B2690000000000000000 /* RectangleDrawViewController.m */,
+				3B6448300000000000000000 /* SecondViewController.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		204052AB0000000000000000 /* RectangleDraw */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 20D8FBFF0000000000000000 /* Build configuration list for PBXNativeTarget "RectangleDraw" */;
+			buildPhases = (
+				111897E20000000000000000 /* Sources */,
+				267EE3960000000000000000 /* Frameworks */,
+				3A03376D0000000000000000 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RectangleDraw";
+			productName = "RectangleDraw";
+			productReference = 2B8C21D90000000000000000 /* RectangleDraw.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		158D2CD10000000000000000 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1294C9870000000000000000 /* Build configuration list for PBXProject "RectangleDraw" */;
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 698552400000000000000000;
+			productRefGroup = 3BE52F4A0000000000000000 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				204052AB0000000000000000 /* RectangleDraw */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3A03376D0000000000000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36B658600000000000000000 /* Default-568h@2x.png in Resources */,
+				189ECE1E0000000000000000 /* Info.plist in Resources */,
+				6C98F0800000000000000000 /* Entitlements.plist in Resources */,
+				34F44FF20000000000000000 /* MainStoryboard.storyboard in Resources */,
+				1149D1C60000000000000000 /* SecondViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		111897E20000000000000000 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				812DD9100000000000000000 /* AppDelegate.h in Sources */,
+				3D2CD49B0000000000000000 /* AppDelegate.m in Sources */,
+				3428C3820000000000000000 /* RectangleDrawViewController.h in Sources */,
+				2793A5CB0000000000000000 /* RectangleDrawViewController.m in Sources */,
+				77A343D00000000000000000 /* SecondViewController.h in Sources */,
+				2537E5000000000000000000 /* SecondViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1410FB2C0000000000000000 /* MonoTouch */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				SDKROOT = iphoneos;
+			};
+			name = MonoTouch;
+		};
+		7E1A3AD00000000000000000 /* MonoTouch */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				PRODUCT_NAME = "RectangleDraw";
+				WRAPPER_EXTENSION = app;
+			};
+			name = MonoTouch;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1294C9870000000000000000 /* Build configuration list for PBXProject "RectangleDraw" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1410FB2C0000000000000000 /* MonoTouch */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = MonoTouch;
+		};
+		20D8FBFF0000000000000000 /* Build configuration list for PBXNativeTarget "RectangleDraw" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E1A3AD00000000000000000 /* MonoTouch */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = MonoTouch;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 158D2CD10000000000000000 /* Project object */;
+}
