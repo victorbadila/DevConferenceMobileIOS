@@ -18,6 +18,8 @@ namespace RectangleDraw
 
 		private int _pixelsPerHour = 25;
 
+		private ConferenceEventButton _selectedConferenceButton;
+
 		private IList<String> _dates;
 
 		private IList<ConferenceEvent> _conferenceEvents;
@@ -55,19 +57,7 @@ namespace RectangleDraw
 
 			CreateHttpTestContent ();
 
-			var rectangle = new RectangleF (30, 400, 100, 40);
-
-			var button = new UIButton (rectangle);
-			button.BackgroundColor = UIColor.Blue;
-			button.SetTitle ("Change View", UIControlState.Normal);
-			button.TouchUpInside += delegate {
-				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
-				var ctrl = (UIViewController)board.InstantiateViewController ("SecondViewController");
-				ctrl.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
-				this.PresentViewController (ctrl, true, null);
-			};
-
-			View.AddSubview (button);
+			DrawButtons ();
 
 		}
 
@@ -83,6 +73,26 @@ namespace RectangleDraw
 				_dates.Add (dayTitle);
 				date = date.AddDays (1);
 			}
+		}
+
+		private void DrawButtons() 
+		{
+			var rectangle = new RectangleF (30, 400, 100, 40);
+
+			var button = new UIButton (rectangle);
+			button.BackgroundColor = UIColor.Blue;
+			button.SetTitle ("Change View", UIControlState.Normal);
+			button.TouchUpInside += delegate {
+				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
+				var ctrl = (SecondViewController)board.InstantiateViewController ("SecondViewController");
+				ctrl.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
+				if (_selectedConferenceButton != null) {
+					ctrl._event = _selectedConferenceButton.conferenceEvent;
+				}
+				this.PresentViewController (ctrl, true, null);
+			};
+
+			View.AddSubview (button);
 		}
 
 		private void DrawUpperHorizontalBar()
@@ -182,14 +192,15 @@ namespace RectangleDraw
 			var eventDurationToPixels = Convert.ToInt16 (TimeIntervalToPixel (conf.StartDate, conf.EndDate));
 
 			var rect = new RectangleF(xCoord, yCoord, 38, eventDurationToPixels);
-			var button = new ConferenceEventButton ();
+			var confButton = new ConferenceEventButton ();
 
-			button.SetTitleColor (UIColor.Black, UIControlState.Normal);
-			button.Font = UIFont.FromName("Helvetica", 9f);
-			button.SetTitle (conf.CreateBy, UIControlState.Normal);
-			button.Frame = rect;
-			button.BackgroundColor = UIColor.FromRGB(204, 255, 255);
-			return button;
+			confButton.SetTitleColor (UIColor.Black, UIControlState.Normal);
+			confButton.Font = UIFont.FromName("Helvetica", 9f);
+			confButton.SetTitle (conf.CreateBy, UIControlState.Normal);
+			confButton.Frame = rect;
+			confButton.BackgroundColor = UIColor.FromRGB(204, 255, 255);
+			confButton.conferenceEvent = conf;
+			return confButton;
 		}
 
 		public int TimeIntervalToPixel(DateTime startDate, DateTime endDate)

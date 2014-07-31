@@ -6,6 +6,7 @@ namespace RectangleDraw
 {
 	public class ConferenceEventButton : UIButton
 	{
+
 		public ConferenceEventButton ()
 		{
 		}
