@@ -58,8 +58,7 @@ namespace RectangleDraw
 			DrawLeftVerticalBar ();
 			DrawInteractionButtons ();
 
-			CreateHttpTestContent ();
-
+			InitConferencesFromServer (null, null);
 		}
 
 		/// <summary>
@@ -84,13 +83,8 @@ namespace RectangleDraw
 		/// </summary>
 		private void DrawInteractionButtons() 
 		{
-			var rectangle = new RectangleF (50, 415, 100, 25);
-			var addEditButton = new UIButton (rectangle);
-			addEditButton.SetTitleColor (UIColor.Black, UIControlState.Normal);
-			addEditButton.Font = UIFont.FromName("Helvetica", 9f);
-			addEditButton.BackgroundColor = UIColor.FromRGBA(161, 100, 50, 60);
-			addEditButton.SetTitle ("Add/Edit Selected", UIControlState.Normal);
-			addEditButton.TouchUpInside += delegate {
+			var addEditButton = CreateMenuButton ("Add/Edit Selected", 20, 415);
+						addEditButton.TouchUpInside += delegate {
 				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
 				var secondViewController = (SecondViewController)board.InstantiateViewController ("SecondViewController");
 				secondViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
@@ -99,26 +93,70 @@ namespace RectangleDraw
 				}
 				this.PresentViewController (secondViewController, true, null);
 			};
-			View.AddSubview (addEditButton);
-
-
-			rectangle = new RectangleF (170, 415, 100, 25);
-			var deleteButton = new UIButton (rectangle);
-			deleteButton.SetTitleColor (UIColor.Black, UIControlState.Normal);
-			deleteButton.Font = UIFont.FromName("Helvetica", 9f);
-			deleteButton.BackgroundColor = UIColor.FromRGBA(161, 100, 50, 60);
-			deleteButton.SetTitle ("Delete Selected", UIControlState.Normal);
+			var deleteButton = CreateMenuButton ("Delete Selected", 120, 415);
 			deleteButton.TouchUpInside += delegate {
 				try {
 					MyRestClient.DELETE(_selectedConferenceButton.conferenceEvent.Id);
+					InitConferencesFromServer(null, null);
 				} catch (Exception e) {
 					// should not get any errors at delete time
 				}
 				_selectedConferenceButton = null;
 			};
+			var refreshButton = CreateMenuButton ("Refresh list", 220, 415); 
+			refreshButton.TouchUpInside += InitConferencesFromServer;
+
+			View.AddSubview (addEditButton);
+			View.AddSubview (refreshButton);
 			View.AddSubview (deleteButton);
 		}
 
+		/// <summary>
+		/// This method inits the conferences by getting them from the server. Arguments are for the case
+		/// in which method is delegate.
+		/// </summary>
+		private void InitConferencesFromServer(object sender, EventArgs ea)  
+		{
+			var resultList = MyRestClient.LIST();
+			_conferenceEvents = resultList;
+			foreach (var confButton in _conferenceEventsGraphicElements) 
+			{
+				confButton.RemoveFromSuperview ();
+				// TODO dealloc?
+			}
+			_conferenceEventsGraphicElements.Clear ();
+			foreach (var conf in _conferenceEvents)
+			{
+				var button = GenerateButtonFromConferenceEvent (conf);
+				if (button != null) 
+				{
+					_conferenceEventsGraphicElements.Add (button);
+					View.AddSubview (button);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Creates and returns an instance of UIButton with certain attributes for custom menu purposes.
+		/// </summary>
+		/// <returns>The menu button.</returns>
+		/// <param name="title">Button title..</param>
+		/// <param name="rectangleFrame">Button's rectangle position frame.</param> 
+		private UIButton CreateMenuButton(String title, float x, float y) {
+			//TODO buttons in second view should have the same look.
+			var rectangleFrame = new RectangleF (x, y, 90, 25);
+			var button = UIButton.FromType (UIButtonType.System);
+			button.Font = UIFont.FromName("Helvetica", 10f);
+			button.BackgroundColor = UIColor.FromRGBA(161, 100, 50, 60);
+			button.SetTitle (title, UIControlState.Normal);
+			button.SetTitleColor (UIColor.Black, UIControlState.Normal);
+			button.Frame = rectangleFrame;
+			return button;
+		}
+
+		/// <summary>
+		/// Draws the horizontal bar containing the whole week.
+		/// </summary>
 		private void DrawUpperHorizontalBar()
 		{
 			var colorFlag = UIColor.Yellow;
@@ -140,6 +178,9 @@ namespace RectangleDraw
 			}
 		}
 
+		/// <summary>
+		/// Draws the vertical bar containing the hours from 8:00 to 20:00.
+		/// </summary>
 		private void DrawLeftVerticalBar()
 		{
 			int startPosY = verticalIntervalStart;
@@ -156,55 +197,19 @@ namespace RectangleDraw
 				startPosY += 2 * _pixelsPerHour;
 				hour += 2;
 			}
-		}
-
-		private void CreateHttpTestContent() 
-		{
-			var rect = new RectangleF(150, 350, 140, 50);
-			var button = UIButton.FromType(UIButtonType.System);
-
-			button.Font = UIFont.FromName("Helvetica", 13f);
-			button.SetTitle ("GET Conferences", UIControlState.Normal);
-			button.Frame = rect;
-			button.TouchUpInside += delegate {
-				var resultList = MyRestClient.LIST();
-				_conferenceEvents = resultList;
-				PopulateViewWithConferenceEvents();
-			};
-
-			View.AddSubview (button);
-		}
-
-		public void PopulateViewWithConferenceEvents() 
-		{
-			foreach (var confButton in _conferenceEventsGraphicElements) 
-			{
-				confButton.RemoveFromSuperview ();
-				// TODO dealloc?
-			}
-			_conferenceEventsGraphicElements.Clear ();
-			foreach (var conf in _conferenceEvents)
-			{
-				var button = GenerateButtonFromConferenceEvent (conf);
-				if (button != null) 
-				{
-					_conferenceEventsGraphicElements.Add (button);
-					View.AddSubview (button);
-				}
-			}
-		}
+   		}
 
 		public ConferenceEventButton GenerateButtonFromConferenceEvent(ConferenceEvent conf)
 		{
-			int day = conf.StartDate.DayOfYear - DateTime.Now.DayOfYear;
+			int day = conf.start_date.DayOfYear - DateTime.Now.DayOfYear;
 			if (day < 0) 
 			{
 				return null;
 			}
 			var xCoord = day * 38 + 37;
-			var yCoord = Convert.ToInt16(DateTimeToPixel (conf.StartDate) + verticalIntervalStart);
+			var yCoord = Convert.ToInt16(DateTimeToPixel (conf.start_date) + verticalIntervalStart);
 
-			var eventDurationToPixels = Convert.ToInt16 (TimeIntervalToPixel (conf.StartDate, conf.EndDate));
+			var eventDurationToPixels = Convert.ToInt16 (TimeIntervalToPixel (conf.start_date, conf.end_date));
 
 			var reactangle = new RectangleF(xCoord, yCoord, 38, eventDurationToPixels);
 			var confButton = new ConferenceEventButton (conf, reactangle);

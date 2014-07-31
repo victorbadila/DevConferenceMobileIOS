@@ -15,9 +15,7 @@ namespace RectangleDraw
 
 		public ConferenceEvent _event;
 
-		public SecondViewController () : base ("SecondViewController", null)
-		{
-		}
+		public SecondViewController () : base ("SecondViewController", null) { }
 
 		public SecondViewController (IntPtr p) : base(p) { }
 
@@ -61,31 +59,32 @@ namespace RectangleDraw
 			datePicker.Hidden = false;
 
 			if (_event != null) {
-				TitleField.Text = _event.Title;
-				OwnerField.Text = _event.CreateBy;
+				TitleField.Text = _event.title;
+				OwnerField.Text = _event.create_by;
 
-				datePicker.Date = DateTime.SpecifyKind (_event.StartDate, DateTimeKind.Utc);
-				var duration = (_event.EndDate - _event.StartDate);
+				datePicker.Date = DateTime.SpecifyKind (_event.start_date, DateTimeKind.Utc);
+				var duration = (_event.end_date - _event.start_date);
 				DurationFieldHours.Text = duration.Hours.ToString ();
 				DurationFieldMinutes.Text = duration.Minutes.ToString ();
 			}
 
-
-			CancelButton.TouchUpInside += delegate {
-				var board = this.Storyboard;
-				var ctrl = (RectangleDrawViewController)board.InstantiateViewController ("RectangleDrawViewController");
-				ctrl.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
-				this.PresentViewController (ctrl, true, null);
-			};
-
+			CancelButton.TouchUpInside += JumpToPrimaryView;
 			SaveButton.TouchUpInside += SaveAction;
 			
 		}
 
+		public void JumpToPrimaryView(object sender, EventArgs ea) 
+		{
+			var board = this.Storyboard;
+			var ctrl = (RectangleDrawViewController)board.InstantiateViewController ("RectangleDrawViewController");
+			ctrl.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
+			this.PresentViewController (ctrl, true, null);
+		}
+
 		public void SaveAction(object sender, EventArgs ea) 
 		{
-			// had to add additional hours. could not find the cause of the misconversion.
-			var startDate = DateTime.SpecifyKind (DatePicker.Date, DateTimeKind.Unspecified).AddHours(3);
+			// TODO had to add additional hours. could not find the cause of the misconversions. possibly to do with server time
+			var startDate = DateTime.SpecifyKind (DatePicker.Date, DateTimeKind.Unspecified).AddHours(6);
 
 			var endDate = startDate;
 			endDate = endDate.AddHours(Convert.ToInt16(DurationFieldHours.Text));
@@ -94,13 +93,12 @@ namespace RectangleDraw
 			var conferenceEvent = new ConferenceEvent(TitleField.Text, OwnerField.Text, startDate, endDate);
 			try {
 				if (_event != null) {
-					// PUT action
 					MyRestClient.PUT (conferenceEvent);
 				} else {
 					MyRestClient.POST (conferenceEvent);
 				}
-			}
-			catch (Exception e) {
+				JumpToPrimaryView(null, null);
+			} catch (Exception e) {
 				ShowErrorAlert (e.Message);
 			}
 		}
@@ -115,7 +113,7 @@ namespace RectangleDraw
 				Title = "Error processing the request",
 				Message = message
 			};
-			alert.AddButton ("Ok :(");
+			alert.AddButton ("Ok");
 			alert.Clicked += (sender, e) => {
 				alert.DismissWithClickedButtonIndex(0, true);
 			};
