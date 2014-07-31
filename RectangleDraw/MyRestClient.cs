@@ -12,7 +12,6 @@ namespace RectangleDraw
 	/// </summary>
 	public static class MyRestClient
 	{
-
 		private static string TestUrl = "http://enigmatic-oasis-8124.herokuapp.com";
 
 		private static RestClient Client;
@@ -56,19 +55,7 @@ namespace RectangleDraw
 			request.AddHeader("Accept", "application/json");
 			request.RequestFormat = DataFormat.Json;
 
-
-			//request.AddParameter ("conference", new { title = conf.Title, create_by = conf.CreateBy, start_date = conf.StartDate, end_date = conf.EndDate });
-
 			request.AddBody(new {conference = conf});
-
-//			request.AddParameter ("application/json", SerializeConfEvent (conf), ParameterType.RequestBody);
-
-
-			//request.AddBody (stringJson);
-
-
-
-			//request.AddBody (SerializeConfEvent (conf));
 
 			var response = Client.Execute(request);
 			HandleResponse (response);
@@ -84,11 +71,10 @@ namespace RectangleDraw
 			var request = new RestRequest ("conferences/" + conf.Id + ".json", Method.PUT);
 
 			request.AddHeader("Content-Type", "application/json");
-			request.AddHeader("Accepts", "application/json");
+			request.AddHeader("Accept", "application/json");
+			request.RequestFormat = DataFormat.Json;
 
-			var stringJson = JsonConvert.SerializeObject (conf);
-
-			request.AddBody (stringJson);
+			request.AddBody(new {conference = conf});
 
 			var response = Client.Execute (request);
 		}
@@ -96,15 +82,13 @@ namespace RectangleDraw
 		/// <summary>
 		/// Deletes the conference event with the given id parameter.
 		/// </summary>
-		public static bool DELETE (int id)
+		public static void DELETE (int id)
 		{
 			var request = new RestRequest ("conferences/" + id + ".json", Method.DELETE);
-			request.AddHeader("Accepts", "application/json");
 			var response = Client.Execute (request);
-			// HandleResponse (response);
 
-			// TODO see if succesful.
-			return true;
+			// In case of unsuspected error.
+			HandleResponse (response);
 		}
 
 		/// <summary>

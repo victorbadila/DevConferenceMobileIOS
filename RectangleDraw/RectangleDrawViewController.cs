@@ -42,24 +42,7 @@ namespace RectangleDraw
 			// Release any cached data, images, etc that aren't in use.
 		}
 
-		#region View lifecycle
-
-		public override void ViewDidLoad ()
-		{
-			base.ViewDidLoad ();
-
-			View.BackgroundColor = UIColor.FromRGB (223, 238, 206);
-
-			// Perform any additional setup after loading the view, typically from a nib.
-
-			InitDates ();
-
-			DrawUpperHorizontalBar ();
-			DrawLeftVerticalBar ();
-			DrawInteractionButtons ();
-
-			InitConferencesFromServer (null, null);
-		}
+		#region Controller logic
 
 		/// <summary>
 		/// Initializes the dates available for editing conference events.
@@ -76,39 +59,6 @@ namespace RectangleDraw
 				_dates.Add (dayTitle);
 				date = date.AddDays (1);
 			}
-		}
-
-		/// <summary>
-		/// Draws Add/Edit and Delete buttons.
-		/// </summary>
-		private void DrawInteractionButtons() 
-		{
-			var addEditButton = CreateMenuButton ("Add/Edit Selected", 20, 415);
-						addEditButton.TouchUpInside += delegate {
-				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
-				var secondViewController = (SecondViewController)board.InstantiateViewController ("SecondViewController");
-				secondViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
-				if (_selectedConferenceButton != null) {
-					secondViewController._event = _selectedConferenceButton.conferenceEvent;
-				}
-				this.PresentViewController (secondViewController, true, null);
-			};
-			var deleteButton = CreateMenuButton ("Delete Selected", 120, 415);
-			deleteButton.TouchUpInside += delegate {
-				try {
-					MyRestClient.DELETE(_selectedConferenceButton.conferenceEvent.Id);
-					InitConferencesFromServer(null, null);
-				} catch (Exception e) {
-					// should not get any errors at delete time
-				}
-				_selectedConferenceButton = null;
-			};
-			var refreshButton = CreateMenuButton ("Refresh list", 220, 415); 
-			refreshButton.TouchUpInside += InitConferencesFromServer;
-
-			View.AddSubview (addEditButton);
-			View.AddSubview (refreshButton);
-			View.AddSubview (deleteButton);
 		}
 
 		/// <summary>
@@ -135,69 +85,6 @@ namespace RectangleDraw
 				}
 			}
 		}
-
-		/// <summary>
-		/// Creates and returns an instance of UIButton with certain attributes for custom menu purposes.
-		/// </summary>
-		/// <returns>The menu button.</returns>
-		/// <param name="title">Button title..</param>
-		/// <param name="rectangleFrame">Button's rectangle position frame.</param> 
-		private UIButton CreateMenuButton(String title, float x, float y) {
-			//TODO buttons in second view should have the same look.
-			var rectangleFrame = new RectangleF (x, y, 90, 25);
-			var button = UIButton.FromType (UIButtonType.System);
-			button.Font = UIFont.FromName("Helvetica", 10f);
-			button.BackgroundColor = UIColor.FromRGBA(161, 100, 50, 60);
-			button.SetTitle (title, UIControlState.Normal);
-			button.SetTitleColor (UIColor.Black, UIControlState.Normal);
-			button.Frame = rectangleFrame;
-			return button;
-		}
-
-		/// <summary>
-		/// Draws the horizontal bar containing the whole week.
-		/// </summary>
-		private void DrawUpperHorizontalBar()
-		{
-			var colorFlag = UIColor.Yellow;
-			var startPosX = 37;
-			for (var i = 0; i < 7; i++) {
-				var rect = new RectangleF (startPosX, 20, 38, 30);
-				var label = new UILabel (rect);
-				label.BackgroundColor = colorFlag;
-				if (colorFlag == UIColor.Yellow) {
-					colorFlag = UIColor.Green;
-				} else {
-					colorFlag = UIColor.Yellow;
-				}
-				label.Font = UIFont.FromName ("Helvetica", 11f);
-				label.Text = _dates [i];
-				label.TextAlignment = UITextAlignment.Center;
-				View.AddSubview (label);
-				startPosX += 38;
-			}
-		}
-
-		/// <summary>
-		/// Draws the vertical bar containing the hours from 8:00 to 20:00.
-		/// </summary>
-		private void DrawLeftVerticalBar()
-		{
-			int startPosY = verticalIntervalStart;
-			var hour = 8;
-			for (var i = 0; i < 7; i++) {
-				var rect = new RectangleF (1, startPosY, 34, 22);
-				var label = new UILabel (rect);
-				label.BackgroundColor = UIColor.Brown;
-				label.Font = UIFont.FromName ("Helvetica", 13f);
-				label.Text = hour.ToString() + ":00";
-				label.TextAlignment = UITextAlignment.Center;
-				View.AddSubview (label);
-
-				startPosY += 2 * _pixelsPerHour;
-				hour += 2;
-			}
-   		}
 
 		public ConferenceEventButton GenerateButtonFromConferenceEvent(ConferenceEvent conf)
 		{
@@ -244,6 +131,127 @@ namespace RectangleDraw
 		public int DateTimeToPixel(DateTime date)
 		{
 			return (date.Hour - 8) * _pixelsPerHour + date.Minute * _pixelsPerHour / 60;
+		}
+
+		#endregion
+
+		#region Visual elements drawing
+
+		/// <summary>
+		/// Draws Add/Edit and Delete buttons.
+		/// </summary>
+		private void DrawInteractionButtons() 
+		{
+			var addEditButton = CreateMenuButton ("Add/Edit Selected", 20, 415);
+			addEditButton.TouchUpInside += delegate {
+				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
+				var secondViewController = (SecondViewController)board.InstantiateViewController ("SecondViewController");
+				secondViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
+				if (_selectedConferenceButton != null) {
+					secondViewController._event = _selectedConferenceButton.conferenceEvent;
+				}
+				this.PresentViewController (secondViewController, true, null);
+			};
+			var deleteButton = CreateMenuButton ("Delete Selected", 120, 415);
+			deleteButton.TouchUpInside += delegate {
+				try {
+					MyRestClient.DELETE(_selectedConferenceButton.conferenceEvent.Id);
+					InitConferencesFromServer(null, null);
+				} catch (Exception e) {
+					// should not get any errors at delete time
+				}
+				_selectedConferenceButton = null;
+			};
+			var refreshButton = CreateMenuButton ("Refresh list", 220, 415); 
+			refreshButton.TouchUpInside += InitConferencesFromServer;
+
+			View.AddSubview (addEditButton);
+			View.AddSubview (refreshButton);
+			View.AddSubview (deleteButton);
+		}
+
+		/// <summary>
+		/// Draws the horizontal bar containing the whole week.
+		/// </summary>
+		private void DrawUpperHorizontalBar()
+		{
+			var colorFlag = UIColor.Yellow;
+			var startPosX = 37;
+			for (var i = 0; i < 7; i++) {
+				var rect = new RectangleF (startPosX, 20, 38, 30);
+				var label = new UILabel (rect);
+				label.BackgroundColor = colorFlag;
+				if (colorFlag == UIColor.Yellow) {
+					colorFlag = UIColor.Green;
+				} else {
+					colorFlag = UIColor.Yellow;
+				}
+				label.Font = UIFont.FromName ("Helvetica", 11f);
+				label.Text = _dates [i];
+				label.TextAlignment = UITextAlignment.Center;
+				View.AddSubview (label);
+				startPosX += 38;
+			}
+		}
+
+		/// <summary>
+		/// Draws the vertical bar containing the hours from 8:00 to 20:00.
+		/// </summary>
+		private void DrawLeftVerticalBar()
+		{
+			int startPosY = verticalIntervalStart;
+			var hour = 8;
+			for (var i = 0; i < 7; i++) {
+				var rect = new RectangleF (1, startPosY, 34, 22);
+				var label = new UILabel (rect);
+				label.BackgroundColor = UIColor.Brown;
+				label.Font = UIFont.FromName ("Helvetica", 13f);
+				label.Text = hour.ToString() + ":00";
+				label.TextAlignment = UITextAlignment.Center;
+				View.AddSubview (label);
+
+				startPosY += 2 * _pixelsPerHour;
+				hour += 2;
+			}
+		}
+
+
+		/// <summary>
+		/// Creates and returns an instance of UIButton with certain attributes for custom menu purposes.
+		/// </summary>
+		/// <returns>The menu button.</returns>
+		/// <param name="title">Button title..</param>
+		/// <param name="rectangleFrame">Button's rectangle position frame.</param> 
+		private UIButton CreateMenuButton(String title, float x, float y) {
+			//TODO buttons in second view should have the same look.
+			var rectangleFrame = new RectangleF (x, y, 90, 25);
+			var button = UIButton.FromType (UIButtonType.System);
+			button.Font = UIFont.FromName("Helvetica", 10f);
+			button.BackgroundColor = UIColor.FromRGBA(161, 100, 50, 60);
+			button.SetTitle (title, UIControlState.Normal);
+			button.SetTitleColor (UIColor.Black, UIControlState.Normal);
+			button.Frame = rectangleFrame;
+			return button;
+		}
+		#endregion
+
+		#region View lifecycle
+
+		public override void ViewDidLoad ()
+		{
+			base.ViewDidLoad ();
+
+			View.BackgroundColor = UIColor.FromRGB (223, 238, 206);
+
+			// Perform any additional setup after loading the view, typically from a nib.
+
+			InitDates ();
+
+			DrawUpperHorizontalBar ();
+			DrawLeftVerticalBar ();
+			DrawInteractionButtons ();
+
+			InitConferencesFromServer (null, null);
 		}
 
 		public override void ViewWillAppear (bool animated)

@@ -21,9 +21,9 @@ namespace RectangleDraw
 		[JsonProperty("end_date")]
 		public DateTime end_date { get; set; }
 
-		public ConferenceEvent (String title, String createBy, DateTime startDate, DateTime endDate)
+		public ConferenceEvent (String textTitle, String createBy, DateTime startDate, DateTime endDate)
 		{
-			title = title;
+			title = textTitle;
 			create_by = createBy;
 			start_date = startDate;
 			end_date = endDate;

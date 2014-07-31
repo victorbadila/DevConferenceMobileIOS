@@ -93,6 +93,7 @@ namespace RectangleDraw
 			var conferenceEvent = new ConferenceEvent(TitleField.Text, OwnerField.Text, startDate, endDate);
 			try {
 				if (_event != null) {
+					conferenceEvent.Id = _event.Id;
 					MyRestClient.PUT (conferenceEvent);
 				} else {
 					MyRestClient.POST (conferenceEvent);
