@@ -35,6 +35,8 @@ namespace RectangleDraw
 
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			View.BackgroundColor = UIColor.FromRGB (223, 238, 206);
+
 			foreach (var field in new List<UITextField>()
 				{ 
 					TitleField,
@@ -80,7 +82,8 @@ namespace RectangleDraw
 			
 		}
 
-		public void SaveAction(object sender, EventArgs ea) {
+		public void SaveAction(object sender, EventArgs ea) 
+		{
 			// had to add additional hours. could not find the cause of the misconversion.
 			var startDate = DateTime.SpecifyKind (DatePicker.Date, DateTimeKind.Unspecified).AddHours(3);
 
@@ -89,7 +92,34 @@ namespace RectangleDraw
 			endDate = endDate.AddMinutes (Convert.ToInt16 (DurationFieldMinutes.Text));
 
 			var conferenceEvent = new ConferenceEvent(TitleField.Text, OwnerField.Text, startDate, endDate);
+			try {
+				if (_event != null) {
+					// PUT action
+					MyRestClient.PUT (conferenceEvent);
+				} else {
+					MyRestClient.POST (conferenceEvent);
+				}
+			}
+			catch (Exception e) {
+				ShowErrorAlert (e.Message);
+			}
+		}
 
+		/// <summary>
+		/// This method draws an error alert on the screen.
+		/// </summary>
+		/// <param name="message">The error message.</param>
+		public void ShowErrorAlert(String message) 
+		{
+			UIAlertView alert = new UIAlertView () {
+				Title = "Error processing the request",
+				Message = message
+			};
+			alert.AddButton ("Ok :(");
+			alert.Clicked += (sender, e) => {
+				alert.DismissWithClickedButtonIndex(0, true);
+			};
+			alert.Show();
 		}
 	}
 }

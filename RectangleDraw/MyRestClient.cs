@@ -33,8 +33,14 @@ namespace RectangleDraw
 			//TODO should handle async
 			//TODO should handle server errors
 			var response = Client.Execute (request);
-			var resultList = JsonConvert.DeserializeObject<List<ConferenceEvent>>(response.Content);
-			return resultList;
+			try {
+				var resultList = JsonConvert.DeserializeObject<List<ConferenceEvent>>(response.Content);
+				return resultList;
+			} catch (Exception e) {
+				//TODO print something like 'server may be down down'
+				return null;
+			}
+
 		}
 
 		/// <summary>
@@ -43,7 +49,7 @@ namespace RectangleDraw
 		/// <param name="conf">The new conference.</param>
 		public static void POST (ConferenceEvent conf)
 		{
-			var request = new RestRequest ("conferenes.json", Method.POST);
+			var request = new RestRequest ("conferences.json", Method.POST);
 
 			request.AddHeader("Content-Type", "application/json");
 			request.AddHeader("Accepts", "application/json");
@@ -61,7 +67,7 @@ namespace RectangleDraw
 		/// <param name="conf">The new values of the conference event.</param>
 		public static void PUT (ConferenceEvent conf)
 		{
-			var request = new RestRequest ("conferenes/" + conf.Id + ".json", Method.PUT);
+			var request = new RestRequest ("conferences/" + conf.Id + ".json", Method.PUT);
 
 			request.AddHeader("Content-Type", "application/json");
 			request.AddHeader("Accepts", "application/json");
@@ -78,15 +84,23 @@ namespace RectangleDraw
 		/// </summary>
 		public static bool DELETE (int id)
 		{
-			var request = new RestRequest ("conferenes/" + id + ".json", Method.DELETE);
-
+			var request = new RestRequest ("conferences/" + id + ".json", Method.DELETE);
 			request.AddHeader("Accepts", "application/json");
-
 			var response = Client.Execute (request);
 
 			// TODO see if succesful.
-
 			return true;
+		}
+
+		/// <summary>
+		/// This method checks response for error messages and if present throws an exception with the error text message.
+		/// </summary>
+		public static void HandleResponse(IRestResponse response)
+		{
+			if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) {
+				var responseBody = JsonConvert.DeserializeObject <Dictionary<String, String>> (response.Content);
+				throw new Exception(responseBody ["error"]);
+			}
 		}
 
 

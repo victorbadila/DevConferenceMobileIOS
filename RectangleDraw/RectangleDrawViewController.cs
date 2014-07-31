@@ -18,7 +18,7 @@ namespace RectangleDraw
 
 		private int _pixelsPerHour = 25;
 
-		private ConferenceEventButton _selectedConferenceButton;
+		private static ConferenceEventButton _selectedConferenceButton;
 
 		private IList<String> _dates;
 
@@ -48,19 +48,23 @@ namespace RectangleDraw
 		{
 			base.ViewDidLoad ();
 
+			View.BackgroundColor = UIColor.FromRGB (223, 238, 206);
+
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			InitDates ();
 
 			DrawUpperHorizontalBar ();
 			DrawLeftVerticalBar ();
+			DrawInteractionButtons ();
 
 			CreateHttpTestContent ();
 
-			DrawButtons ();
-
 		}
 
+		/// <summary>
+		/// Initializes the dates available for editing conference events.
+		/// </summary>
 		private void InitDates()
 		{
 			_dates = new List<String> ();
@@ -75,25 +79,44 @@ namespace RectangleDraw
 			}
 		}
 
-		private void DrawButtons() 
+		/// <summary>
+		/// Draws Add/Edit and Delete buttons.
+		/// </summary>
+		private void DrawInteractionButtons() 
 		{
-			var rectangle = new RectangleF (30, 400, 100, 40);
-
-			var button = new UIButton (rectangle);
-			button.BackgroundColor = UIColor.Blue;
-			button.SetTitle ("Change View", UIControlState.Normal);
-			button.TouchUpInside += delegate {
+			var rectangle = new RectangleF (50, 415, 100, 25);
+			var addEditButton = new UIButton (rectangle);
+			addEditButton.SetTitleColor (UIColor.Black, UIControlState.Normal);
+			addEditButton.Font = UIFont.FromName("Helvetica", 9f);
+			addEditButton.BackgroundColor = UIColor.FromRGBA(161, 100, 50, 60);
+			addEditButton.SetTitle ("Add/Edit Selected", UIControlState.Normal);
+			addEditButton.TouchUpInside += delegate {
 				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
 				var secondViewController = (SecondViewController)board.InstantiateViewController ("SecondViewController");
 				secondViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
-
 				if (_selectedConferenceButton != null) {
 					secondViewController._event = _selectedConferenceButton.conferenceEvent;
 				}
 				this.PresentViewController (secondViewController, true, null);
 			};
+			View.AddSubview (addEditButton);
 
-			View.AddSubview (button);
+
+			rectangle = new RectangleF (170, 415, 100, 25);
+			var deleteButton = new UIButton (rectangle);
+			deleteButton.SetTitleColor (UIColor.Black, UIControlState.Normal);
+			deleteButton.Font = UIFont.FromName("Helvetica", 9f);
+			deleteButton.BackgroundColor = UIColor.FromRGBA(161, 100, 50, 60);
+			deleteButton.SetTitle ("Delete Selected", UIControlState.Normal);
+			deleteButton.TouchUpInside += delegate {
+				try {
+					MyRestClient.DELETE(_selectedConferenceButton.conferenceEvent.Id);
+				} catch (Exception e) {
+					// should not get any errors at delete time
+				}
+				_selectedConferenceButton = null;
+			};
+			View.AddSubview (deleteButton);
 		}
 
 		private void DrawUpperHorizontalBar()
@@ -137,23 +160,14 @@ namespace RectangleDraw
 
 		private void CreateHttpTestContent() 
 		{
-			var rect = new RectangleF(150, 400, 140, 50);
+			var rect = new RectangleF(150, 350, 140, 50);
 			var button = UIButton.FromType(UIButtonType.System);
 
 			button.Font = UIFont.FromName("Helvetica", 13f);
 			button.SetTitle ("GET Conferences", UIControlState.Normal);
 			button.Frame = rect;
 			button.TouchUpInside += delegate {
-
-				var client = new RestClient(testUrl);
-				var request = new RestRequest("conferences.json", Method.GET);
-
-				request.AddHeader("Accepts", "application/json");
-
-				//TODO should handle async
-				//TODO should handle server errors
-				var response = client.Execute(request);
-				var resultList = JsonConvert.DeserializeObject<List<ConferenceEvent>>(response.Content);
+				var resultList = MyRestClient.LIST();
 				_conferenceEvents = resultList;
 				PopulateViewWithConferenceEvents();
 			};
@@ -193,29 +207,23 @@ namespace RectangleDraw
 			var eventDurationToPixels = Convert.ToInt16 (TimeIntervalToPixel (conf.StartDate, conf.EndDate));
 
 			var reactangle = new RectangleF(xCoord, yCoord, 38, eventDurationToPixels);
-			var confButton = new ConferenceEventButton (conf);
-
-			confButton.SetTitleColor (UIColor.Black, UIControlState.Normal);
-			confButton.Font = UIFont.FromName("Helvetica", 9f);
-			confButton.SetTitle (conf.CreateBy, UIControlState.Normal);
-			confButton.Frame = reactangle;
+			var confButton = new ConferenceEventButton (conf, reactangle);
 
 			confButton.TouchUpInside += delegate(object sender, EventArgs e) {
-				if (confButton.Selected) {
-					confButton.Selected = false;
+				if (confButton.IsSelected) {
+					confButton.IsSelected = false;
 					confButton.BackgroundColor = ConferenceEventButton.UnselectedColor;
 					_selectedConferenceButton = null;
 				} else {
 					if (_selectedConferenceButton != null) {
 						_selectedConferenceButton.BackgroundColor = ConferenceEventButton.UnselectedColor;
-						_selectedConferenceButton.Selected = false;
+						_selectedConferenceButton.IsSelected = false;
 					}
-					confButton.Selected = true;
+					confButton.IsSelected = true;
 					confButton.BackgroundColor = ConferenceEventButton.SelectedColor;
 					_selectedConferenceButton = confButton;
 				}
-			};
-			
+			};			
 
 			return confButton;
 		}
