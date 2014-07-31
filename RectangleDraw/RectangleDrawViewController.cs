@@ -84,12 +84,13 @@ namespace RectangleDraw
 			button.SetTitle ("Change View", UIControlState.Normal);
 			button.TouchUpInside += delegate {
 				UIStoryboard board = UIStoryboard.FromName ("MainStoryboard", null);
-				var ctrl = (SecondViewController)board.InstantiateViewController ("SecondViewController");
-				ctrl.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
+				var secondViewController = (SecondViewController)board.InstantiateViewController ("SecondViewController");
+				secondViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
+
 				if (_selectedConferenceButton != null) {
-					ctrl._event = _selectedConferenceButton.conferenceEvent;
+					secondViewController._event = _selectedConferenceButton.conferenceEvent;
 				}
-				this.PresentViewController (ctrl, true, null);
+				this.PresentViewController (secondViewController, true, null);
 			};
 
 			View.AddSubview (button);
@@ -191,15 +192,31 @@ namespace RectangleDraw
 
 			var eventDurationToPixels = Convert.ToInt16 (TimeIntervalToPixel (conf.StartDate, conf.EndDate));
 
-			var rect = new RectangleF(xCoord, yCoord, 38, eventDurationToPixels);
-			var confButton = new ConferenceEventButton ();
+			var reactangle = new RectangleF(xCoord, yCoord, 38, eventDurationToPixels);
+			var confButton = new ConferenceEventButton (conf);
 
 			confButton.SetTitleColor (UIColor.Black, UIControlState.Normal);
 			confButton.Font = UIFont.FromName("Helvetica", 9f);
 			confButton.SetTitle (conf.CreateBy, UIControlState.Normal);
-			confButton.Frame = rect;
-			confButton.BackgroundColor = UIColor.FromRGB(204, 255, 255);
-			confButton.conferenceEvent = conf;
+			confButton.Frame = reactangle;
+
+			confButton.TouchUpInside += delegate(object sender, EventArgs e) {
+				if (confButton.Selected) {
+					confButton.Selected = false;
+					confButton.BackgroundColor = ConferenceEventButton.UnselectedColor;
+					_selectedConferenceButton = null;
+				} else {
+					if (_selectedConferenceButton != null) {
+						_selectedConferenceButton.BackgroundColor = ConferenceEventButton.UnselectedColor;
+						_selectedConferenceButton.Selected = false;
+					}
+					confButton.Selected = true;
+					confButton.BackgroundColor = ConferenceEventButton.SelectedColor;
+					_selectedConferenceButton = confButton;
+				}
+			};
+			
+
 			return confButton;
 		}
 

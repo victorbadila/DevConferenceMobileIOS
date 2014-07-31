@@ -58,6 +58,16 @@ namespace RectangleDraw
 			datePicker.MaximumDate = DateTime.Today.AddDays (6);
 			datePicker.Hidden = false;
 
+			if (_event != null) {
+				TitleField.Text = _event.Title;
+				OwnerField.Text = _event.CreateBy;
+
+				datePicker.Date = DateTime.SpecifyKind (_event.StartDate, DateTimeKind.Utc);
+				var duration = (_event.EndDate - _event.StartDate);
+				DurationFieldHours.Text = duration.Hours.ToString ();
+				DurationFieldMinutes.Text = duration.Minutes.ToString ();
+			}
+
 
 			CancelButton.TouchUpInside += delegate {
 				var board = this.Storyboard;
@@ -66,22 +76,19 @@ namespace RectangleDraw
 				this.PresentViewController (ctrl, true, null);
 			};
 
-			SaveButton.TouchUpInside += delegate {
-				//SaveAction;
-			};
+			SaveButton.TouchUpInside += SaveAction;
 			
 		}
 
-		public void SaveAction() {
-			/**
-			if (_event == null) 
-			{
-				MyRestClient.POST (
-					new ConferenceEvent (TitleField.Text, OwnerField.Text, 
-						DayField.Text, StartTimeField.Text, EndTimeField.Text));
-			}
-			*/
+		public void SaveAction(object sender, EventArgs ea) {
+			// had to add additional hours. could not find the cause of the misconversion.
+			var startDate = DateTime.SpecifyKind (DatePicker.Date, DateTimeKind.Unspecified).AddHours(3);
 
+			var endDate = startDate;
+			endDate = endDate.AddHours(Convert.ToInt16(DurationFieldHours.Text));
+			endDate = endDate.AddMinutes (Convert.ToInt16 (DurationFieldMinutes.Text));
+
+			var conferenceEvent = new ConferenceEvent(TitleField.Text, OwnerField.Text, startDate, endDate);
 
 		}
 	}
