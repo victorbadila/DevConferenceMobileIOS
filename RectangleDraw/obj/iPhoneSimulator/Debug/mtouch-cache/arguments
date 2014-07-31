@@ -23,6 +23,8 @@
 	/Developer/MonoTouch/usr/lib/mono/2.1/System.Net.Http.dll \
 	-r \
 	/Users/victorbadila-home/Desktop/XamarinProjects/UIViewTests/Components/restsharp-104.4.0/lib/ios/RestSharp.MonoTouch.dll \
+	-r \
+	/Users/victorbadila-home/Desktop/XamarinProjects/UIViewTests/Components/json.net-4.5.11/lib/ios/Newtonsoft.Json.dll \
 	-debug \
 	-nolink \
 	-sdk \

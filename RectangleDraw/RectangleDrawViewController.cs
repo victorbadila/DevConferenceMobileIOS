@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Net.Http;
+
 using RestSharp;
+using Newtonsoft.Json;
 
 using MonoTouch.Foundation;
 using MonoTouch.CoreGraphics;
@@ -14,6 +16,8 @@ namespace RectangleDraw
 	public partial class RectangleDrawViewController : UIViewController
 	{
 
+		private int _pixelsPerHour = 25;
+
 		private IList<String> _dates;
 
 		private IList<ConferenceEvent> _conferenceEvents;
@@ -21,7 +25,7 @@ namespace RectangleDraw
 		private IList<ConferenceEventButton> _conferenceEventsGraphicElements = new List<ConferenceEventButton>();
 
 		private String testUrl = "http://enigmatic-oasis-8124.herokuapp.com";
-			    
+
 		private Int16 verticalIntervalStart = 50;
 
 		public RectangleDrawViewController (IntPtr handle) : base (handle)
@@ -32,7 +36,7 @@ namespace RectangleDraw
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+
 			// Release any cached data, images, etc that aren't in use.
 		}
 
@@ -45,10 +49,12 @@ namespace RectangleDraw
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			InitDates ();
-			InitUpperHorizontalBar ();
-			InitLeftVerticalBar ();
+
+			DrawUpperHorizontalBar ();
+			DrawLeftVerticalBar ();
 
 			CreateHttpTestContent ();
+
 		}
 
 		private void InitDates()
@@ -65,7 +71,7 @@ namespace RectangleDraw
 			}
 		}
 
-		private void InitUpperHorizontalBar()
+		private void DrawUpperHorizontalBar()
 		{
 			var colorFlag = UIColor.Yellow;
 			var startPosX = 37;
@@ -86,9 +92,9 @@ namespace RectangleDraw
 			}
 		}
 
-		private void InitLeftVerticalBar()
+		private void DrawLeftVerticalBar()
 		{
-			var startPosY = verticalIntervalStart;
+			int startPosY = verticalIntervalStart;
 			var hour = 8;
 			for (var i = 0; i < 7; i++) {
 				var rect = new RectangleF (1, startPosY, 34, 22);
@@ -99,7 +105,7 @@ namespace RectangleDraw
 				label.TextAlignment = UITextAlignment.Center;
 				View.AddSubview (label);
 
-				startPosY += 50;
+				startPosY += 2 * _pixelsPerHour;
 				hour += 2;
 			}
 		}
@@ -121,8 +127,9 @@ namespace RectangleDraw
 
 				//TODO should handle async
 				//TODO should handle server errors
-				var resultList = client.Execute<List<ConferenceEvent>>(request);
-				_conferenceEvents = resultList.Data;
+				var response = client.Execute(request);
+				var resultList = JsonConvert.DeserializeObject<List<ConferenceEvent>>(response.Content);
+				_conferenceEvents = resultList;
 				PopulateViewWithConferenceEvents();
 			};
 
@@ -140,26 +147,28 @@ namespace RectangleDraw
 			foreach (var conf in _conferenceEvents)
 			{
 				var button = GenerateButtonFromConferenceEvent (conf);
-				_conferenceEventsGraphicElements.Add (button);
-				View.AddSubview (button);
+				if (button != null) 
+				{
+					_conferenceEventsGraphicElements.Add (button);
+					View.AddSubview (button);
+				}
 			}
 		}
 
 		public ConferenceEventButton GenerateButtonFromConferenceEvent(ConferenceEvent conf)
 		{
-			var day = conf.StartDate.DayOfYear - DateTime.Now.DayOfYear;
+			int day = conf.StartDate.DayOfYear - DateTime.Now.DayOfYear;
 			if (day < 0) 
 			{
-				//TODO handle exception.
-				throw new Exception ("conference no longer belongs in database");
+				return null;
 			}
 			var xCoord = day * 38 + 37;
+			var yCoord = Convert.ToInt16(DateTimeToPixel (conf.StartDate) + verticalIntervalStart);
 
-			var yCoord = Convert.ToInt16(timeIntervalToPixel(conf.StartDate, conf.EndDate) + verticalIntervalStart);
+			var eventDurationToPixels = Convert.ToInt16 (TimeIntervalToPixel (conf.StartDate, conf.EndDate));
 
-			var rect = new RectangleF(xCoord, yCoord, 38, 20);
+			var rect = new RectangleF(xCoord, yCoord, 38, eventDurationToPixels);
 			var button = new ConferenceEventButton ();
-				//UIButton.FromType(UIButtonType.System);
 
 			button.SetTitleColor (UIColor.Black, UIControlState.Normal);
 			button.Font = UIFont.FromName("Helvetica", 9f);
@@ -169,12 +178,17 @@ namespace RectangleDraw
 			return button;
 		}
 
-		public int timeIntervalToPixel(DateTime startDate, DateTime endDate)
+		public int TimeIntervalToPixel(DateTime startDate, DateTime endDate)
 		{
 			var hours = endDate.Hour - startDate.Hour;
 			var minutes = endDate.Minute - startDate.Minute;
-			//TODO plm..
-			return hours * 25 + (minutes * 25 / 60) + (startDate.Hour - 8) *  25 + startDate.Minute * 25 / 60;
+			var result = hours * _pixelsPerHour + ((minutes * _pixelsPerHour) / 60);
+			return result;
+		}
+
+		public int DateTimeToPixel(DateTime date)
+		{
+			return (date.Hour - 8) * _pixelsPerHour + date.Minute * _pixelsPerHour / 60;
 		}
 
 		public override void ViewWillAppear (bool animated)
