@@ -37,7 +37,7 @@ namespace RectangleDraw
 				var resultList = JsonConvert.DeserializeObject<List<ConferenceEvent>>(response.Content);
 				return resultList;
 			} catch (Exception e) {
-				//TODO print something like 'server may be down down'
+				//TODO handle this exception. server down, check connection, etc.
 				return null;
 			}
 
@@ -51,9 +51,7 @@ namespace RectangleDraw
 		{
 			var request = new RestRequest ("conferences.json", Method.POST);
 
-			request.AddHeader("Content-Type", "application/json");
-			request.AddHeader("Accept", "application/json");
-			request.RequestFormat = DataFormat.Json;
+			SetRequestAttributes (request);
 
 			request.AddBody(new {conference = conf});
 
@@ -70,13 +68,12 @@ namespace RectangleDraw
 		{
 			var request = new RestRequest ("conferences/" + conf.Id + ".json", Method.PUT);
 
-			request.AddHeader("Content-Type", "application/json");
-			request.AddHeader("Accept", "application/json");
-			request.RequestFormat = DataFormat.Json;
+			SetRequestAttributes (request);
 
 			request.AddBody(new {conference = conf});
 
 			var response = Client.Execute (request);
+			HandleResponse (response);
 		}
 
 		/// <summary>
@@ -102,6 +99,13 @@ namespace RectangleDraw
 				var responseBody = JsonConvert.DeserializeObject <Dictionary<String, String>> (response.Content);
 				throw new Exception(responseBody ["error"]);
 			}
+		}
+
+		public static void SetRequestAttributes(IRestRequest request)
+		{
+			request.AddHeader("Content-Type", "application/json");
+			request.AddHeader("Accept", "application/json");
+			request.RequestFormat = DataFormat.Json;
 		}
 
 	}

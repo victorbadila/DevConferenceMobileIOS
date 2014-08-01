@@ -55,7 +55,7 @@ namespace RectangleDraw
 			var datePicker = DatePicker;
 			datePicker.Mode = UIDatePickerMode.DateAndTime;
 			datePicker.MinimumDate = DateTime.Today;
-			datePicker.MaximumDate = DateTime.Today.AddDays (6);
+			datePicker.MaximumDate = DateTime.Today.AddDays (7);
 			datePicker.Hidden = false;
 
 			if (_event != null) {

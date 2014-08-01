@@ -25,7 +25,7 @@ namespace RectangleDraw
 			BackgroundColor = UnselectedColor;
 			SetTitleColor (UIColor.Black, UIControlState.Normal);
 			Font = UIFont.FromName("Helvetica", 9f);
-			SetTitle (conf.create_by, UIControlState.Normal);
+			SetTitle (conf.title, UIControlState.Normal);
 			Frame = rectangle;
 		}
 
