@@ -62,7 +62,8 @@ namespace RectangleDraw
 				TitleField.Text = _event.title;
 				OwnerField.Text = _event.create_by;
 
-				datePicker.Date = DateTime.SpecifyKind (_event.start_date, DateTimeKind.Utc);
+				// TODO Hour conversion is done weirdly, this is why I had to substract some hours. Fix this later
+				datePicker.Date = DateTime.SpecifyKind (_event.start_date.AddHours(-3), DateTimeKind.Utc);
 				var duration = (_event.end_date - _event.start_date);
 				DurationFieldHours.Text = duration.Hours.ToString ();
 				DurationFieldMinutes.Text = duration.Minutes.ToString ();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 using RestSharp;
 using Newtonsoft.Json;
@@ -65,10 +66,11 @@ namespace RectangleDraw
 		/// This method inits the conferences by getting them from the server. Arguments are for the case
 		/// in which method is delegate.
 		/// </summary>
-		private void InitConferencesFromServer(object sender, EventArgs ea)  
+		private async void InitConferencesFromServer(object sender, EventArgs ea)  
 		{
 			var resultList = MyRestClient.LIST();
-			_conferenceEvents = resultList;
+			var r = await resultList;
+			_conferenceEvents = r;
 			foreach (var confButton in _conferenceEventsGraphicElements) 
 			{
 				confButton.RemoveFromSuperview ();
@@ -250,8 +252,6 @@ namespace RectangleDraw
 			DrawUpperHorizontalBar ();
 			DrawLeftVerticalBar ();
 			DrawInteractionButtons ();
-
-			InitConferencesFromServer (null, null);
 		}
 
 		public override void ViewWillAppear (bool animated)
@@ -262,6 +262,7 @@ namespace RectangleDraw
 		public override void ViewDidAppear (bool animated)
 		{
 			base.ViewDidAppear (animated);
+			InitConferencesFromServer (null, null);
 		}
 
 		public override void ViewWillDisappear (bool animated)

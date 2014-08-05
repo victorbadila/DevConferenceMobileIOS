@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 using RestSharp;
 using Newtonsoft.Json;
@@ -24,15 +25,13 @@ namespace RectangleDraw
 		/// <summary>
 		/// This method list all conferences.
 		/// </summary>
-		public static IList<ConferenceEvent> LIST ()
+		async public static Task<IList<ConferenceEvent>> LIST ()
 		{
 			var request = new RestRequest("conferences.json", Method.GET);
+			request.AddHeader("Accept", "application/json");      
 
-			request.AddHeader("Accept", "application/json");
-
-			//TODO should handle async
-			//TODO should handle server errors
-			var response = Client.Execute (request);
+			//Task<IRestResponse> resp = Client.ExecuteTaskAsync (request);
+			var response = await Client.ExecuteTaskAsync (request);
 			try {
 				var resultList = JsonConvert.DeserializeObject<List<ConferenceEvent>>(response.Content);
 				return resultList;
@@ -47,7 +46,7 @@ namespace RectangleDraw
 		/// This method creates a new conference.
 		/// </summary>
 		/// <param name="conf">The new conference.</param>
-		public static void POST (ConferenceEvent conf)
+		async public static void POST (ConferenceEvent conf)
 		{
 			var request = new RestRequest ("conferences.json", Method.POST);
 
@@ -55,7 +54,7 @@ namespace RectangleDraw
 
 			request.AddBody(new {conference = conf});
 
-			var response = Client.Execute(request);
+			var response = await Client.ExecuteTaskAsync (request);
 			HandleResponse (response);
 		}
 
@@ -64,7 +63,7 @@ namespace RectangleDraw
 		/// This method updates the method with the id corresponding to the Id of the given argument.
 		/// </summary>
 		/// <param name="conf">The new values of the conference event.</param>
-		public static void PUT (ConferenceEvent conf)
+		async public static void PUT (ConferenceEvent conf)
 		{
 			var request = new RestRequest ("conferences/" + conf.Id + ".json", Method.PUT);
 
@@ -72,17 +71,17 @@ namespace RectangleDraw
 
 			request.AddBody(new {conference = conf});
 
-			var response = Client.Execute (request);
+			var response = await Client.ExecuteTaskAsync (request);
 			HandleResponse (response);
 		}
 
 		/// <summary>
 		/// Deletes the conference event with the given id parameter.
 		/// </summary>
-		public static void DELETE (int id)
+		async public static void DELETE (int id)
 		{
 			var request = new RestRequest ("conferences/" + id + ".json", Method.DELETE);
-			var response = Client.Execute (request);
+			var response = await Client.ExecuteTaskAsync (request);
 
 			// In case of unsuspected error.
 			HandleResponse (response);

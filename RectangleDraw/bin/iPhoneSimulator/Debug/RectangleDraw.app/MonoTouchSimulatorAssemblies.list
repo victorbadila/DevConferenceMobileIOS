@@ -1,8 +1,8 @@
 mscorlib.dll
-System.dll
 System.Core.dll
-Mono.Dynamic.Interpreter.dll
+System.dll
 System.Xml.dll
+Mono.Dynamic.Interpreter.dll
 RestSharp.MonoTouch.dll
 System.Xml.Linq.dll
 Newtonsoft.Json.dll

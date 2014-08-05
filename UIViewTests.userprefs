@@ -1,11 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RectangleDraw/RectangleDrawViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RectangleDraw/MyRestClient.cs">
     <Files>
-      <File FileName="RectangleDraw/RectangleDrawViewController.cs" Line="23" Column="32" />
-      <File FileName="RectangleDraw/SecondViewController.cs" Line="95" Column="26" />
-      <File FileName="RectangleDraw/MyRestClient.cs" Line="88" Column="4" />
-      <File FileName="RectangleDraw/ConferenceEvent.cs" Line="18" Column="31" />
+      <File FileName="RectangleDraw/RectangleDrawViewController.cs" Line="1" Column="1" />
+      <File FileName="RectangleDraw/SecondViewController.cs" Line="48" Column="5" />
+      <File FileName="RectangleDraw/MyRestClient.cs" Line="49" Column="53" />
+      <File FileName="RectangleDraw/ConferenceEvent.cs" Line="1" Column="1" />
+      <File FileName="RectangleDraw/ConferenceEventButton.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
